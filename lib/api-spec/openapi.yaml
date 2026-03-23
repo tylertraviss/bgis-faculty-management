@@ -1,0 +1,686 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: BGIS Implementation Tracker API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: projects
+    description: Project management
+  - name: workbook
+    description: Implementation workbook items
+  - name: milestones
+    description: Project milestones
+  - name: uat
+    description: UAT test scenarios
+  - name: status
+    description: Executive status updates
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List all projects
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectInput"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a project by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    put:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectInput"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{projectId}/workbook:
+    get:
+      operationId: listWorkbookItems
+      tags: [workbook]
+      summary: List workbook items for a project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of workbook items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorkbookItem"
+    post:
+      operationId: createWorkbookItem
+      tags: [workbook]
+      summary: Create a workbook item
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWorkbookItemInput"
+      responses:
+        "201":
+          description: Created workbook item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkbookItem"
+
+  /projects/{projectId}/workbook/{id}:
+    put:
+      operationId: updateWorkbookItem
+      tags: [workbook]
+      summary: Update a workbook item
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateWorkbookItemInput"
+      responses:
+        "200":
+          description: Updated workbook item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkbookItem"
+    delete:
+      operationId: deleteWorkbookItem
+      tags: [workbook]
+      summary: Delete a workbook item
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /projects/{projectId}/milestones:
+    get:
+      operationId: listMilestones
+      tags: [milestones]
+      summary: List milestones for a project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of milestones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Milestone"
+
+  /projects/{projectId}/milestones/{id}:
+    put:
+      operationId: updateMilestone
+      tags: [milestones]
+      summary: Update a milestone
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMilestoneInput"
+      responses:
+        "200":
+          description: Updated milestone
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Milestone"
+
+  /projects/{projectId}/uat:
+    get:
+      operationId: listUatScenarios
+      tags: [uat]
+      summary: List UAT scenarios for a project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of UAT scenarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UatScenario"
+    post:
+      operationId: createUatScenario
+      tags: [uat]
+      summary: Create a UAT scenario
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUatScenarioInput"
+      responses:
+        "201":
+          description: Created UAT scenario
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UatScenario"
+
+  /projects/{projectId}/uat/{id}:
+    put:
+      operationId: updateUatScenario
+      tags: [uat]
+      summary: Update a UAT scenario
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUatScenarioInput"
+      responses:
+        "200":
+          description: Updated UAT scenario
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UatScenario"
+    delete:
+      operationId: deleteUatScenario
+      tags: [uat]
+      summary: Delete a UAT scenario
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /projects/{projectId}/status:
+    get:
+      operationId: getProjectStatus
+      tags: [status]
+      summary: Get executive status for a project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Project status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectStatus"
+    put:
+      operationId: updateProjectStatus
+      tags: [status]
+      summary: Update executive status for a project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProjectStatusInput"
+      responses:
+        "200":
+          description: Updated project status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectStatus"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        client:
+          type: string
+        system:
+          type: string
+        sponsor:
+          type: string
+        startDate:
+          type: string
+        targetGoLive:
+          type: string
+        complexity:
+          type: string
+          enum: [Low, Medium, High]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - name
+        - client
+        - system
+        - sponsor
+        - startDate
+        - targetGoLive
+        - complexity
+        - createdAt
+        - updatedAt
+
+    CreateProjectInput:
+      type: object
+      properties:
+        name:
+          type: string
+        client:
+          type: string
+        system:
+          type: string
+        sponsor:
+          type: string
+        startDate:
+          type: string
+        targetGoLive:
+          type: string
+        complexity:
+          type: string
+          enum: [Low, Medium, High]
+      required:
+        - name
+        - client
+        - system
+        - sponsor
+        - startDate
+        - targetGoLive
+        - complexity
+
+    WorkbookItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        category:
+          type: string
+          enum: [Business Requirements, Key Stakeholders, System Dependencies, Data Migration Notes, Configuration Decisions]
+        title:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+        status:
+          type: string
+          enum: [Complete, In Progress, Blocked]
+        notes:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - projectId
+        - category
+        - title
+        - description
+        - owner
+        - status
+
+    CreateWorkbookItemInput:
+      type: object
+      properties:
+        category:
+          type: string
+          enum: [Business Requirements, Key Stakeholders, System Dependencies, Data Migration Notes, Configuration Decisions]
+        title:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+        status:
+          type: string
+          enum: [Complete, In Progress, Blocked]
+        notes:
+          type: string
+      required:
+        - category
+        - title
+        - description
+        - owner
+        - status
+
+    UpdateWorkbookItemInput:
+      type: object
+      properties:
+        category:
+          type: string
+          enum: [Business Requirements, Key Stakeholders, System Dependencies, Data Migration Notes, Configuration Decisions]
+        title:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+        status:
+          type: string
+          enum: [Complete, In Progress, Blocked]
+        notes:
+          type: string
+
+    Milestone:
+      type: object
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        phase:
+          type: string
+          enum: [Discovery, Requirements, Configuration, UAT, Sign-Off, Go-Live]
+        status:
+          type: string
+          enum: [Not Started, In Progress, Complete, At Risk]
+        owner:
+          type: string
+        targetDate:
+          type: string
+        completedDate:
+          type: string
+        notes:
+          type: string
+        sortOrder:
+          type: integer
+      required:
+        - id
+        - projectId
+        - phase
+        - status
+        - owner
+        - sortOrder
+
+    UpdateMilestoneInput:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [Not Started, In Progress, Complete, At Risk]
+        owner:
+          type: string
+        targetDate:
+          type: string
+        completedDate:
+          type: string
+        notes:
+          type: string
+
+    UatScenario:
+      type: object
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        tester:
+          type: string
+        priority:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        status:
+          type: string
+          enum: [Not Started, In Testing, Passed, Failed]
+        notes:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - projectId
+        - title
+        - description
+        - tester
+        - priority
+        - status
+
+    CreateUatScenarioInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        tester:
+          type: string
+        priority:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        status:
+          type: string
+          enum: [Not Started, In Testing, Passed, Failed]
+        notes:
+          type: string
+      required:
+        - title
+        - description
+        - tester
+        - priority
+        - status
+
+    UpdateUatScenarioInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        tester:
+          type: string
+        priority:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        status:
+          type: string
+          enum: [Not Started, In Testing, Passed, Failed]
+        notes:
+          type: string
+
+    ProjectStatus:
+      type: object
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        ragStatus:
+          type: string
+          enum: [Green, Amber, Red]
+        weeklyUpdate:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - projectId
+        - ragStatus
+        - weeklyUpdate
+        - updatedAt
+
+    UpdateProjectStatusInput:
+      type: object
+      properties:
+        ragStatus:
+          type: string
+          enum: [Green, Amber, Red]
+        weeklyUpdate:
+          type: string
+      required:
+        - ragStatus
+        - weeklyUpdate

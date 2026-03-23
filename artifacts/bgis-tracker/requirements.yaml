@@ -1,0 +1,15 @@
+packages:
+  "@hello-pangea/dnd": "Required for the UAT Kanban board drag and drop functionality"
+  "date-fns": "For formatting and calculating dates (Days to Go-Live)"
+  "recharts": "For rendering visual progress indicators on the dashboard"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes safely"
+  "@hookform/resolvers": "Zod validation resolver for React Hook Form"
+  "zod": "Schema validation for forms"
+  "react-hook-form": "Form state management"
+
+images: []
+
+notes:
+  - "The app relies on the provided generated React Query hooks from @workspace/api-client-react"
+  - "Local Zod schemas are used for form validation to match the generated API types"

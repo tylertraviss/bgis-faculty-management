@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["artifacts/bgis-tracker/src/*"],
+      "@workspace/api-client-react": ["src/api-client.ts"]
+    }
+  },
+  "include": [
+    "artifacts/bgis-tracker/src/**/*",
+    "src/**/*",
+    "api/**/*",
+    "vite.config.ts"
+  ]
+}
